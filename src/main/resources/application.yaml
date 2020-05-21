@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: cloud-function-test
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  cloud:
+    function:
+      definition: playerUpdate;playerFeeder
+    stream:
+      kafka:
+        streams:
+          binder:
+            configuration:
+              default:
+                key:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+                value:
+                  serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              commit:
+                interval:
+                  ms: 1000
+
+      bindings:
+        playerUpdate-in-0:
+          destination: playerTopic
+        playerUpdate-out-0:
+          destination: otherPlayerTopic
+        playerFeeder-out-0:
+          destination: playerTopic
